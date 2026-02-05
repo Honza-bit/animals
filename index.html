@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🐾 ANIMALS – PRACTICE (Mobile)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --text:#e9eefc;
+      --muted:#a9b4d6;
+      --ok:#28d17c;
+      --bad:#ff5a6a;
+      --accent:#6aa8ff;
+      --line:rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 20% 0%, rgba(106,168,255,.18), transparent 60%),
+                  radial-gradient(1000px 600px at 90% 10%, rgba(40,209,124,.14), transparent 55%),
+                  radial-gradient(900px 600px at 50% 100%, rgba(255,90,106,.12), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.35;
+    }
+    header{
+      max-width:980px;
+      margin:18px auto 8px;
+      padding:0 14px;
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    h1{
+      margin:0;
+      font-size: clamp(20px, 4.2vw, 30px);
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .topbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .pill{
+      background:rgba(255,255,255,.08);
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:8px 12px;
+      box-shadow: var(--shadow);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .pill b{ color:var(--text) }
+    button{
+      cursor:pointer;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      color:var(--text);
+      border-radius: 14px;
+      padding:10px 12px;
+      font-weight:700;
+      box-shadow: var(--shadow);
+      transition: transform .06s ease, filter .15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:hover{ filter: brightness(1.08) }
+    button:active{ transform: translateY(1px) }
+    .primary{
+      border-color: rgba(106,168,255,.35);
+      background: linear-gradient(180deg, rgba(106,168,255,.22), rgba(106,168,255,.10));
+    }
+
+    main{
+      max-width:980px;
+      margin: 10px auto 34px;
+      padding: 0 14px;
+      display:grid;
+      gap:12px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .card h2{
+      margin:0 0 6px;
+      font-size:17px;
+      display:flex;
+      gap:10px;
+      align-items:baseline;
+      flex-wrap:wrap;
+    }
+    .hint{
+      color:var(--muted);
+      font-size:13px;
+      margin:0 0 10px;
+    }
+    .tiny{ font-size:12px; color:var(--muted); }
+
+    /* Mobile-friendly matching (tap/tap) */
+    .match-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      padding:10px 12px;
+      border-radius: 999px;
+      font-weight:700;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: filter .15s ease, transform .06s ease;
+    }
+    .chip:active{ transform: translateY(1px) }
+    .chip.selected{
+      border-color: rgba(106,168,255,.7);
+      background: rgba(106,168,255,.14);
+    }
+    .chip.done{
+      opacity:.55;
+    }
+
+    .action-list{
+      display:grid;
+      gap:10px;
+    }
+    .action{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .action:active{ transform: translateY(1px) }
+    .action .slot{
+      padding:6px 10px;
+      border-radius: 999px;
+      border:1px dashed rgba(255,255,255,.22);
+      color:var(--muted);
+      background: rgba(255,255,255,.04);
+      font-size:13px;
+      text-align:center;
+      min-width: 140px;
+    }
+    .action.selected{
+      border-color: rgba(106,168,255,.65);
+      background: rgba(106,168,255,.10);
+    }
+
+    .ok{ outline:2px solid rgba(40,209,124,.55); }
+    .bad{ outline:2px solid rgba(255,90,106,.55); }
+
+    /* Questions */
+    select, input[type="text"]{
+      width: 100%;
+      padding:11px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
+      color: var(--text);
+      outline:none;
+      font-size:16px; /* prevents iOS zoom */
+    }
+    .q{
+      padding:12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      margin:10px 0;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    .label{
+      font-weight:800;
+    }
+    .feedback{
+      font-weight:800;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      font-size:13px;
+      justify-self:start;
+    }
+    .fb-ok{ color: var(--ok); border-color: rgba(40,209,124,.35) !important; }
+    .fb-bad{ color: var(--bad); border-color: rgba(255,90,106,.35) !important; }
+
+    /* Multiple choice */
+    .choices{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+    .choice{
+      padding:12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      font-weight:700;
+    }
+    .choice.selected{
+      border-color: rgba(106,168,255,.65);
+      background: rgba(106,168,255,.12);
+    }
+
+    .footerbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:10px;
+    }
+    .msg{ color:var(--muted); font-size:13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>🐾 ANIMALS – PRACTICE (Mobile)</h1>
+      <p class="sub">Verze pro mobily: místo drag&drop jen ťukání (zvíře → akce).</p>
+    </div>
+    <div class="topbar">
+      <div class="pill">Skóre: <b id="score">0</b> / <span id="max">0</span></div>
+      <button class="primary" id="checkBtn">✅ Zkontrolovat</button>
+      <button id="resetBtn">🔁 Reset</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1 MATCH (tap/tap) -->
+    <section class="card" id="sec1">
+      <h2>1️⃣ Match the animal with the action <span class="tiny">(Spoj zvíře s tím, co umí dělat)</span></h2>
+      <p class="hint">1) Ťukni na zvíře. 2) Ťukni na akci. Hotovo ✅</p>
+
+      <div class="match-grid">
+        <div>
+          <div class="tiny" style="margin-bottom:8px;">Animals</div>
+          <div class="chips" id="animalChips">
+            <div class="chip" data-animal="bird">a bird 🕊️</div>
+            <div class="chip" data-animal="fish">a fish 🐟</div>
+            <div class="chip" data-animal="monkey">a monkey 🐒</div>
+            <div class="chip" data-animal="snake">a snake 🐍</div>
+            <div class="chip" data-animal="kangaroo">a kangaroo 🦘</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="tiny" style="margin-bottom:8px;">Actions</div>
+          <div class="action-list" id="actionList">
+            <div class="action" data-action="climb"><div><b>a)</b> climb trees</div><div class="slot">tap to assign</div></div>
+            <div class="action" data-action="swim"><div><b>b)</b> swim</div><div class="slot">tap to assign</div></div>
+            <div class="action" data-action="fly"><div><b>c)</b> fly</div><div class="slot">tap to assign</div></div>
+            <div class="action" data-action="crawl"><div><b>d)</b> crawl</div><div class="slot">tap to assign</div></div>
+            <div class="action" data-action="jump"><div><b>e)</b> jump</div><div class="slot">tap to assign</div></div>
+          </div>
+          <div class="tiny" style="margin-top:8px;">Tip: když chceš změnit přiřazení, vyber jiné zvíře a znovu ťukni na akci.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 COMPLETE -->
+    <section class="card" id="sec2">
+      <h2>2️⃣ Complete the sentences <span class="tiny">(Doplň správné sloveso)</span></h2>
+      <p class="hint">Vyber správné sloveso: <b>run • fly • swim • climb • sleep</b></p>
+
+      <div class="q" data-q="2-1">
+        <div class="row">
+          <div class="label">Lions usually ________ at night.</div>
+          <select>
+            <option value="">— choose —</option>
+            <option value="run">run</option><option value="fly">fly</option><option value="swim">swim</option>
+            <option value="climb">climb</option><option value="sleep">sleep</option>
+          </select>
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+
+      <div class="q" data-q="2-2">
+        <div class="row">
+          <div class="label">Dolphins can ________ very fast.</div>
+          <select>
+            <option value="">— choose —</option>
+            <option value="run">run</option><option value="fly">fly</option><option value="swim">swim</option>
+            <option value="climb">climb</option><option value="sleep">sleep</option>
+          </select>
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+
+      <div class="q" data-q="2-3">
+        <div class="row">
+          <div class="label">Monkeys often ________ trees.</div>
+          <select>
+            <option value="">— choose —</option>
+            <option value="run">run</option><option value="fly">fly</option><option value="swim">swim</option>
+            <option value="climb">climb</option><option value="sleep">sleep</option>
+          </select>
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+
+      <div class="q" data-q="2-4">
+        <div class="row">
+          <div class="label">Snakes don’t ________, they crawl.</div>
+          <select>
+            <option value="">— choose —</option>
+            <option value="run">run</option><option value="fly">fly</option><option value="swim">swim</option>
+            <option value="climb">climb</option><option value="sleep">sleep</option>
+          </select>
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+
+      <div class="q" data-q="2-5">
+        <div class="row">
+          <div class="label">Birds ________ in the sky.</div>
+          <select>
+            <option value="">— choose —</option>
+            <option value="run">run</option><option value="fly">fly</option><option value="swim">swim</option>
+            <option value="climb">climb</option><option value="sleep">sleep</option>
+          </select>
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 PRESENT CONTINUOUS -->
+    <section class="card" id="sec3">
+      <h2>3️⃣ What are they doing now? <span class="tiny">(Present Continuous)</span></h2>
+      <p class="hint">Piš celé věty. Neřeš velikost písmen ani tečky/otazníky.</p>
+
+      <div class="q" data-q="3-1">
+        <div class="row">
+          <div class="label">The lion ____________________________ (sleep).</div>
+          <input type="text" placeholder="Write your answer here" />
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+
+      <div class="q" data-q="3-2">
+        <div class="row">
+          <div class="label">The monkeys ____________________________ (climb) the tree.</div>
+          <input type="text" placeholder="Write your answer here" />
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+
+      <div class="q" data-q="3-3">
+        <div class="row">
+          <div class="label">Look! The dolphin ____________________________ (jump) out of the water.</div>
+          <input type="text" placeholder="Write your answer here" />
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+
+      <div class="q" data-q="3-4">
+        <div class="row">
+          <div class="label">The snake ____________________________ (not / run).</div>
+          <input type="text" placeholder="Write your answer here" />
+          <span class="feedback" data-fb> </span>
+        </div>
+        <div class="tiny">Tip: Můžeš napsat <b>isn't</b> nebo <b>is not</b>.</div>
+      </div>
+
+      <div class="q" data-q="3-5">
+        <div class="row">
+          <div class="label">____________________________ the birds ____________________________ (fly)?</div>
+          <input type="text" placeholder="Write your answer here" />
+          <span class="feedback" data-fb> </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 MULTIPLE CHOICE -->
+    <section class="card" id="sec4">
+      <h2>4️⃣ Choose the correct answer</h2>
+      <p class="hint">Ťukni na správnou možnost.</p>
+
+      <div class="q" data-q="4-1">
+        <div class="row">
+          <div class="label">A kangaroo can</div>
+          <span class="feedback" data-fb> </span>
+        </div>
+        <div class="choices">
+          <div class="choice" data-val="fly">a) fly</div>
+          <div class="choice" data-val="jump">b) jump</div>
+          <div class="choice" data-val="swim">c) swim</div>
+        </div>
+      </div>
+
+      <div class="q" data-q="4-2">
+        <div class="row">
+          <div class="label">Penguins usually</div>
+          <span class="feedback" data-fb> </span>
+        </div>
+        <div class="choices">
+          <div class="choice" data-val="live in the desert">a) live in the desert</div>
+          <div class="choice" data-val="fly">b) fly</div>
+          <div class="choice" data-val="swim">c) swim</div>
+        </div>
+      </div>
+
+      <div class="q" data-q="4-3">
+        <div class="row">
+          <div class="label">A giraffe has got</div>
+          <span class="feedback" data-fb> </span>
+        </div>
+        <div class="choices">
+          <div class="choice" data-val="a long neck">a) a long neck</div>
+          <div class="choice" data-val="wings">b) wings</div>
+          <div class="choice" data-val="fins">c) fins</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 SPEAK/THINK -->
+    <section class="card" id="sec5">
+      <h2>5️⃣ Speak / Think <span class="tiny">(rychlovka na závěr)</span></h2>
+      <p class="hint">Neboduje se — jen pro zábavu 🙂</p>
+
+      <div class="q">
+        <div class="row">
+          <div class="label">Name 3 animals that can fly</div>
+          <input type="text" placeholder="e.g. eagle, parrot, bat" />
+        </div>
+      </div>
+      <div class="q">
+        <div class="row">
+          <div class="label">Name 2 animals that live in water</div>
+          <input type="text" placeholder="e.g. dolphin, shark" />
+        </div>
+      </div>
+      <div class="q">
+        <div class="row">
+          <div class="label">Name 1 animal that is sleeping now 😄</div>
+          <input type="text" placeholder="e.g. a cat" />
+        </div>
+      </div>
+
+      <div class="footerbar">
+        <div class="msg" id="msg">Tip: Nejlepší je kliknout „Zkontrolovat“ až úplně na konci.</div>
+        <div class="tiny">Mobile-friendly ✨</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ✅ Odpovědi jsou jen v JS (ne v HTML a ne v placeholderu).
+    const ANSWERS = {
+      match: { climb:"monkey", swim:"fish", fly:"bird", crawl:"snake", jump:"kangaroo" },
+      complete: { "2-1":"sleep","2-2":"swim","2-3":"climb","2-4":"run","2-5":"fly" },
+      present: {
+        "3-1":["the lion is sleeping"],
+        "3-2":["the monkeys are climbing the tree"],
+        "3-3":["the dolphin is jumping out of the water","look the dolphin is jumping out of the water"],
+        "3-4":["the snake isnt running","the snake isn't running","the snake is not running"],
+        "3-5":["are the birds flying"]
+      },
+      choice: { "4-1":"jump","4-2":"swim","4-3":"a long neck" }
+    };
+
+    // Score
+    const MAX = 5 + 5 + 5 + 3;
+    const scoreEl = document.getElementById('score');
+    const maxEl = document.getElementById('max');
+    const msgEl = document.getElementById('msg');
+    maxEl.textContent = String(MAX);
+
+    // --- Matching (tap/tap) ---
+    const animalChips = Array.from(document.querySelectorAll('#animalChips .chip'));
+    const actions = Array.from(document.querySelectorAll('#actionList .action'));
+
+    let selectedAnimal = null;
+
+    function animalLabel(key){
+      const map = { bird:"a bird", fish:"a fish", monkey:"a monkey", snake:"a snake", kangaroo:"a kangaroo" };
+      return map[key] || key;
+    }
+
+    // store assignments: action -> animal
+    const assigned = {};
+
+    animalChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (chip.classList.contains('done')) {
+          // allow reusing by selecting it anyway (in case they want to move it)
+        }
+        animalChips.forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        selectedAnimal = chip.dataset.animal;
+        // highlight actions for easier tapping
+        actions.forEach(a => a.classList.add('selected'));
+        setTimeout(() => actions.forEach(a => a.classList.remove('selected')), 650);
+      });
+    });
+
+    actions.forEach(act => {
+      act.addEventListener('click', () => {
+        const actionKey = act.dataset.action;
+
+        if (!selectedAnimal) {
+          // if no animal selected, tapping an action clears it (nice mobile UX)
+          if (assigned[actionKey]) {
+            const oldAnimal = assigned[actionKey];
+            delete assigned[actionKey];
+            act.querySelector('.slot').textContent = "tap to assign";
+            // un-dim old chip if it is no longer used anywhere
+            if (!Object.values(assigned).includes(oldAnimal)) {
+              const chip = animalChips.find(c => c.dataset.animal === oldAnimal);
+              chip?.classList.remove('done');
+            }
+          }
+          return;
+        }
+
+        // If this animal is already assigned to another action, remove that old assignment
+        for (const [k,v] of Object.entries(assigned)) {
+          if (v === selectedAnimal && k !== actionKey) {
+            delete assigned[k];
+            const oldAct = actions.find(a => a.dataset.action === k);
+            if (oldAct) oldAct.querySelector('.slot').textContent = "tap to assign";
+          }
+        }
+
+        // If this action already has another animal, free that chip (if not used elsewhere)
+        if (assigned[actionKey] && assigned[actionKey] !== selectedAnimal) {
+          const replacedAnimal = assigned[actionKey];
+          if (!Object.values(assigned).filter(v => v !== replacedAnimal).includes(replacedAnimal)) {
+            const chip = animalChips.find(c => c.dataset.animal === replacedAnimal);
+            chip?.classList.remove('done');
+          }
+        }
+
+        // Assign
+        assigned[actionKey] = selectedAnimal;
+        act.querySelector('.slot').textContent = animalLabel(selectedAnimal);
+
+        // Mark chip as used
+        const chip = animalChips.find(c => c.dataset.animal === selectedAnimal);
+        chip?.classList.add('done');
+
+        // Clear selection
+        animalChips.forEach(c => c.classList.remove('selected'));
+        selectedAnimal = null;
+      });
+    });
+
+    // --- Multiple choice selection ---
+    document.querySelectorAll('.choices').forEach(group => {
+      group.querySelectorAll('.choice').forEach(ch => {
+        ch.addEventListener('click', () => {
+          group.querySelectorAll('.choice').forEach(x => x.classList.remove('selected'));
+          ch.classList.add('selected');
+          group.dataset.selected = ch.dataset.val;
+        });
+      });
+    });
+
+    // Helpers
+    function norm(s){
+      return (s || "").toLowerCase().trim().replace(/[?!.]/g,"").replace(/\s+/g," ");
+    }
+    function setFeedback(qEl, ok, text){
+      const fb = qEl.querySelector('[data-fb]');
+      fb.textContent = text;
+      fb.classList.remove('fb-ok','fb-bad');
+      fb.classList.add(ok ? 'fb-ok' : 'fb-bad');
+      qEl.classList.remove('ok','bad');
+      qEl.classList.add(ok ? 'ok' : 'bad');
+    }
+
+    // CHECK
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      let score = 0;
+
+      // 1 match
+      actions.forEach(act => {
+        const k = act.dataset.action;
+        const chosen = assigned[k] || "";
+        const ok = chosen === (ANSWERS.match[k] || "");
+        act.classList.remove('ok','bad');
+        act.classList.add(ok ? 'ok' : 'bad');
+        if (ok) score++;
+      });
+
+      // 2 selects
+      document.querySelectorAll('#sec2 .q').forEach(q => {
+        const qid = q.dataset.q;
+        const sel = q.querySelector('select');
+        const ok = sel.value === ANSWERS.complete[qid];
+        setFeedback(q, ok, ok ? "✅ OK" : "❌ Try again");
+        if (ok) score++;
+      });
+
+      // 3 inputs
+      document.querySelectorAll('#sec3 .q').forEach(q => {
+        const qid = q.dataset.q;
+        const inp = q.querySelector('input[type="text"]');
+        const user = norm(inp.value);
+        const expectedArr = (ANSWERS.present[qid] || []).map(norm);
+        const ok = expectedArr.some(a => a === user);
+        setFeedback(q, ok, ok ? "✅ Nice" : "❌ Not quite");
+        if (ok) score++;
+      });
+
+      // 4 choices
+      document.querySelectorAll('#sec4 .q').forEach(q => {
+        const qid = q.dataset.q;
+        const group = q.querySelector('.choices');
+        const chosen = group.dataset.selected || "";
+        const ok = chosen === ANSWERS.choice[qid];
+        setFeedback(q, ok, ok ? "✅ Correct" : "❌ Choose one");
+        if (ok) score++;
+      });
+
+      scoreEl.textContent = String(score);
+
+      if (score === MAX) msgEl.textContent = "🔥 Perfektní! Všechno správně.";
+      else if (score >= Math.floor(MAX*0.7)) msgEl.textContent = "💪 Hodně dobrý! Oprav jen červené.";
+      else msgEl.textContent = "👀 Zkus to znovu — červené jsou špatně.";
+    });
+
+    // RESET
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      scoreEl.textContent = "0";
+      msgEl.textContent = "Tip: Nejlepší je kliknout „Zkontrolovat“ až úplně na konci.";
+
+      // reset match
+      for (const k of Object.keys(assigned)) delete assigned[k];
+      actions.forEach(a => {
+        a.classList.remove('ok','bad');
+        a.querySelector('.slot').textContent = "tap to assign";
+      });
+      animalChips.forEach(c => c.classList.remove('selected','done'));
+      selectedAnimal = null;
+
+      // reset task2
+      document.querySelectorAll('#sec2 select').forEach(s => s.value = "");
+      document.querySelectorAll('#sec2 .q').forEach(q => {
+        q.classList.remove('ok','bad');
+        const fb = q.querySelector('[data-fb]');
+        fb.textContent = " ";
+        fb.classList.remove('fb-ok','fb-bad');
+      });
+
+      // reset task3
+      document.querySelectorAll('#sec3 input[type="text"]').forEach(i => i.value = "");
+      document.querySelectorAll('#sec3 .q').forEach(q => {
+        q.classList.remove('ok','bad');
+        const fb = q.querySelector('[data-fb]');
+        fb.textContent = " ";
+        fb.classList.remove('fb-ok','fb-bad');
+      });
+
+      // reset task4
+      document.querySelectorAll('#sec4 .choices').forEach(g => {
+        delete g.dataset.selected;
+        g.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+      });
+      document.querySelectorAll('#sec4 .q').forEach(q => {
+        q.classList.remove('ok','bad');
+        const fb = q.querySelector('[data-fb]');
+        fb.textContent = " ";
+        fb.classList.remove('fb-ok','fb-bad');
+      });
+
+      // section 5 inputs
+      document.querySelectorAll('#sec5 input[type="text"]').forEach(i => i.value = "");
+    });
+  </script>
+</body>
+</html>
